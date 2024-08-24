@@ -9,6 +9,7 @@ import edu.java.javademoexam.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -26,11 +27,17 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<UserDTO> findAll() {
-		return userRepository.findAll().stream().map(userMapper::mapEntityToDTO).toList();
+		return userRepository.findAll().stream()
+				.map(userMapper::mapEntityToDTO)
+				.toList();
 	}
 
 	@Override
 	public List<UserDTO> findByCountry(List<Country> countries) {
-		return userRepository.findAll().stream().filter(x -> countries.contains(x.getCountry())).map(userMapper::mapEntityToDTO).toList();
+		return userRepository.findAll().stream()
+				.filter(x -> countries.contains(x.getCountry()))
+				.sorted(Comparator.comparing(x -> x.getCountry().toString()))
+				.map(userMapper::mapEntityToDTO)
+				.toList();
 	}
 }
